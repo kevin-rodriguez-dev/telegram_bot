@@ -38,3 +38,11 @@ Este proyecto utiliza **Python**, la API de **Google Gemini** y el framework **L
    ```bash
    pip install -r requirements.txt
    ```
+
+4. **Configura las API Keys**:
+   
+   Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+   ```env
+   TELEGRAM_BOT_TOKEN=
+   GEMINI_API_KEY=
+   ```
