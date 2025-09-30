@@ -6,11 +6,11 @@ from utils.tools import ClimaAPI
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Comando /start - Mensaje de bienvenida"""
     welcome_message = (
-        "👋 ¡Hola! Soy tu asistente virtual inteligente.\n\n"
+        "¡Hola! Soy tu asistente virtual inteligente.\n\n"
         "Puedo ayudarte con varias cosas:\n"
-        "• Responder preguntas generales\n"
-        "• Consultar el clima\n"
-        "• Informarte la fecha y hora\n\n"
+        "- Responder preguntas generales\n"
+        "- Consultar el clima\n"
+        "- Informarte la fecha y hora\n\n"
         "Escribe /help para ver todos los comandos disponibles."
     )
     await update.message.reply_text(welcome_message)
@@ -18,12 +18,12 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Comando /help - Muestra los comandos disponibles"""
     help_text = (
-        "📋 *Comandos Disponibles:*\n\n"
+        "*Comandos Disponibles:*\n\n"
         "/start - Iniciar el bot\n"
         "/help - Mostrar este mensaje de ayuda\n"
         "/fecha - Obtener la fecha y hora actual\n"
         "/clima [ciudad] - Consultar el clima de una ciudad\n\n"
-        "💬 También puedes escribirme cualquier pregunta y te responderé."
+        "También puedes escribirme cualquier pregunta y te responderé."
     )
     await update.message.reply_text(help_text, parse_mode="Markdown")
 
@@ -45,9 +45,9 @@ async def date_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         mes = meses[current_date.month - 1]
         
         formatted_date = (
-            f"📅 *Fecha y Hora Actual*\n\n"
-            f"{dia_semana.capitalize()}, {current_date.day} de {mes} de {current_date.year}\n"
-            f"🕐 {current_date.strftime('%H:%M:%S')}"
+            f"*Fecha y Hora Actual*\n\n"
+            f"Hoy es {dia_semana.capitalize()}, {current_date.day} de {mes} de {current_date.year}\n"
+            f"{current_date.strftime('%H:%M:%S')}"
         )
         
         await update.message.reply_text(formatted_date, parse_mode="Markdown")

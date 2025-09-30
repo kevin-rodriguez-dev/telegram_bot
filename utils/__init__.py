@@ -1,4 +1,3 @@
-# utils/__init__.py
 """
 Módulo de utilidades del bot
 Contiene el cliente de Gemini y las herramientas personalizadas

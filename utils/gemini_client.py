@@ -18,12 +18,6 @@ llm = ChatGoogleGenerativeAI(
 def generar_respuesta(mensaje_usuario: str) -> str:
     """
     Genera una respuesta simple usando Gemini sin herramientas
-    
-    Args:
-        mensaje_usuario: El mensaje del usuario
-        
-    Returns:
-        La respuesta generada por Gemini
     """
     try:
         response = llm.invoke([HumanMessage(content=mensaje_usuario)])
