@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from datetime import datetime
 from utils.tools import ClimaAPI
+from telegram.constants import ChatAction
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Comando /start - Mensaje de bienvenida"""
@@ -30,7 +31,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def date_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Comando /fecha - Muestra la fecha y hora actual"""
     try:
-        await update.message.chat.send_action("typing")
+        await update.message.chat.send_action(ChatAction.TYPING)
         
         current_date = datetime.now()
         
@@ -69,7 +70,7 @@ async def weather_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ciudad = " ".join(context.args)
         
         # Mostrar indicador de "escribiendo..."
-        await update.message.chat.send_action("typing")
+        await update.message.chat.send_action(ChatAction.TYPING)
         
         # Obtener clima usando la herramienta
         clima_tool = ClimaAPI()

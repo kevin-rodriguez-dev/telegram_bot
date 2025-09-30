@@ -108,7 +108,7 @@ class BusquedaWeb:
     def __init__(self):
         self.base_url = "https://api.duckduckgo.com/"
         self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
         }
     
     def buscar_web(self, consulta:str, cantidad:int = 3) -> str:
