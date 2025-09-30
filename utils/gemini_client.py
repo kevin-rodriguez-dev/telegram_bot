@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 # Crear el cliente Gemini usando LangChain
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash-exp",
+    model="gemini-2.5-pro",
     google_api_key=GEMINI_API_KEY,
     temperature=0.7
 )
@@ -62,7 +62,7 @@ def crear_agente_conversacional():
             memory=memory,
             verbose=True,
             handle_parsing_errors=True,
-            max_iterations=3
+            max_iterations=4
         )
         
         logger.info(" Agente conversacional creado exitosamente")

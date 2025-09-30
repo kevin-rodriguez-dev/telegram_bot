@@ -39,7 +39,8 @@ class ClimaAPI:
             
             response.raise_for_status()
             data = response.json()
-            
+
+            print(data)
             # Extraer información
             # temp = data["temp"]
             # feels_like = data["feels_like"]
@@ -86,8 +87,7 @@ class ClimaAPI:
 class FechaHoraAPI:
     """Herramienta para obtener fecha y hora actual"""
     
-    @staticmethod
-    def obtener_fecha_hora() -> str:
+    def obtener_fecha_hora(self, _: str = "") -> str:
         """
         Obtiene la fecha y hora actual en español
         
@@ -115,6 +115,88 @@ class FechaHoraAPI:
             logger.error(f"Error al obtener fecha/hora: {str(e)}")
             return f" Error al obtener fecha/hora: {str(e)}"
 
+class BusquedaWeb:
+    """Herramienta para buscar información en la web usando DuckDuckGo"""
+    
+    def __init__(self):
+        self.base_url = "https://api.duckduckgo.com/"
+        self.headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+        }
+    
+    def buscar_web(self, consulta:str, cantidad:int = 3) -> str:
+        try:
+            params = {
+                "q": consulta,
+                "format": "json",
+                "no_html": 1,
+                "skip_disambig": 1
+            }
+
+            response = requests.get(
+                self.base_url, params=params, headers=self.headers, timeout=10
+            )
+            response.raise_for_status()
+            data = response.json()
+
+            resultados_texto = f"Resultados de busqueda para '{consulta}':\n\n"
+
+            if data.get("Answer"):
+                resultados_texto += f"Respuesta directa: {data['Answer']}\n\n"
+            
+            if data.get("AbstractText"):
+                resultados_texto += f"Resumen: {data['AbstractText']}\n\n"
+                if data.get("AbstractSource"):
+                    resultados_texto += f"Fuente: {data['AbstractSource']}\n\n"
+
+            if data.get("RelatedTopics"):
+                resultados_texto += "Temas relacionados:\n\n"
+                for i, tema in enumerate(data["RelatedTopics"][:cantidad], 1):
+                    if isinstance(tema, dict) and tema.get("Text"):
+                        texto = tema["Text"][:200] + "..." if len(tema["Text"]) > 200 else tema["Text"]
+                        resultados_texto += f"{i}. {texto}\n\n"
+                resultados_texto += "\n"
+            
+            if data.get("Definition"):
+                resultados_texto += f"Definicion: {data['Definition']}\n\n"
+                if data.get("DefinitionSource"):
+                    resultados_texto += f"Fuente: {data['DefinitionSource']}\n\n"
+            
+            if not any([data.get("Answer"), data.get("AbstractText"), data.get("RelatedTopics"), data.get("Definition")]):
+                return self._busqueda_alternativa(consulta)
+
+            return resultados_texto.strip()
+
+        except Exception as e:
+            return f"Error al buscar en la web: {str(e)}"
+    
+    def _busqueda_alternativa(self, consulta:str) -> str:
+        try:
+            url = "https://duckduckgo.com/html/"
+            params = {
+                "q": consulta
+            }
+
+            response = requests.get(url, params=params, headers=self.headers, timeout=10)
+            
+            if response.status_code == 200:
+                content = response.text
+
+                import re
+                titles = re.findall(r'<a[^>]*class="result__a"[^>]*>([^<]+)</a>', content)
+
+                if titles:
+                    resultado = f"Resultados de busqueda para '{consulta}':\n\n"
+                    for i, title in enumerate(titles[:3], 1):
+                        resultado += f"{i}. {title}\n\n"
+                    
+                    return resultado.strip()
+
+            return f"Busqueda realizada para '{consulta}'. No se encontraron resultados."
+                
+
+        except Exception as e:
+            return f"Error al buscar en la web: {str(e)}"
 
 class MultiAgent:
     """Clase que agrupa todas las herramientas disponibles para el agente"""
@@ -122,6 +204,7 @@ class MultiAgent:
     def __init__(self):
         self.clima_api = ClimaAPI()
         self.fecha_hora_api = FechaHoraAPI()
+        self.busqueda_web = BusquedaWeb()
     
     def langchain(self) -> List[Tool]:
         """
@@ -147,6 +230,14 @@ class MultiAgent:
                     "Útil para obtener la fecha y hora actual. "
                     "No requiere ningún parámetro de entrada. "
                     "Devuelve la fecha completa en español con día, mes, año y hora."
+                )
+            ),
+            Tool(
+                name="buscar_en_web",
+                func=self.busqueda_web.buscar_web,
+                description=(
+                    "Útil para buscar información en la web."
+                    "Input: término o pregunta de búsqueda (ej: 'Que es Machine learning?')"
                 )
             )
         ]
