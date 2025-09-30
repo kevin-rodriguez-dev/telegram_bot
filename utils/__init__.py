@@ -4,7 +4,7 @@ Contiene el cliente de Gemini y las herramientas personalizadas
 """
 
 from .gemini_client import crear_agente_conversacional, generar_respuesta
-from .tools import WeatherTool, DatetimeTool, WebSearchTool, CurrencyClass, MultiAgent
+from .tools import WeatherTool, DatetimeTool, WebSearchTool, CurrencyTool, MultiAgent
 
 __all__ = [
     'crear_agente_conversacional',
@@ -12,6 +12,6 @@ __all__ = [
     'WeatherTool',
     'DatetimeTool',
     'WebSearchTool',
-    'CurrencyClass',
+    'CurrencyTool',
     'MultiAgent'
 ]

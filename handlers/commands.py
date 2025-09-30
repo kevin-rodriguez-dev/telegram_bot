@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from datetime import datetime
-from utils.tools import WeatherTool, CurrencyClass
+from utils.tools import WeatherTool, CurrencyTool
 from telegram.constants import ChatAction
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -98,7 +98,7 @@ async def currency_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.chat.send_action(ChatAction.TYPING)
         
         # Obtener conversión usando la herramienta
-        currency_tool = CurrencyClass()
+        currency_tool = CurrencyTool()
         resultado = currency_tool.convertir_moneda(entrada)
         
         await update.message.reply_text(resultado, parse_mode="Markdown")

@@ -18,12 +18,6 @@ class WeatherTool:
     def obtener_clima(self, ciudad: str) -> str:
         """
         Obtiene información del clima para una ciudad específica
-        
-        Args:
-            ciudad: Nombre de la ciudad
-            
-        Returns:
-            Información formateada del clima
         """
         try:
             params = {
@@ -185,7 +179,7 @@ class WebSearchTool:
         except Exception as e:
             return f"Error al buscar en la web: {str(e)}"
 
-class CurrencyClass:
+class CurrencyTool:
     """Herramienta para conversión de monedas en tiempo real"""
     def __init__(self):
         self.base_url = "https://api.exchangerate-api.com/v4/latest"
@@ -236,10 +230,10 @@ class MultiAgent:
     """Clase que agrupa todas las herramientas disponibles para el agente"""
     
     def __init__(self):
-        self.clima_api = WeatherTool()
-        self.fecha_hora_api = DatetimeTool()
-        self.busqueda_web = WebSearchTool()
-        self.currency_api = CurrencyClass()
+        self.weather = WeatherTool()
+        self.datetime = DatetimeTool()
+        self.websearch = WebSearchTool()
+        self.currency = CurrencyTool()
     
     def langchain(self) -> List[Tool]:
         """
@@ -251,7 +245,7 @@ class MultiAgent:
         tools = [
             Tool(
                 name="consultar_clima",
-                func=self.clima_api.obtener_clima,
+                func=self.weather.obtener_clima,
                 description=(
                     "Útil para obtener información del clima actual de una ciudad. "
                     "Proporciona temperatura, humedad y condiciones meteorológicas. "
@@ -260,7 +254,7 @@ class MultiAgent:
             ),
             Tool(
                 name="obtener_fecha_hora",
-                func=self.fecha_hora_api.obtener_fecha_hora,
+                func=self.datetime.obtener_fecha_hora,
                 description=(
                     "Útil para obtener la fecha y hora actual. "
                     "No requiere ningún parámetro de entrada. "
@@ -269,7 +263,7 @@ class MultiAgent:
             ),
             Tool(
                 name="buscar_en_web",
-                func=self.busqueda_web.buscar_web,
+                func=self.websearch.buscar_web,
                 description=(
                     "Útil para buscar información en la web."
                     "Input: término o pregunta de búsqueda (ej: 'Que es Machine learning?')"
@@ -277,7 +271,7 @@ class MultiAgent:
             ),
             Tool(
                 name="convertir_moneda",
-                func=self.currency_api.convertir_moneda,
+                func=self.currency.convertir_moneda,
                 description=(
                     "Útil para convertir entre diferentes monedas usando tasas de cambio en tiempo real. "
                     "Input: formato 'cantidad moneda_origen a moneda_destino' "
