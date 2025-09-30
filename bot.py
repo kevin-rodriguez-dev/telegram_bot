@@ -1,4 +1,5 @@
 import logging
+from telegram import BotCommand
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 from config import TELEGRAM_BOT_TOKEN
 from handlers.commands import start_command, help_command, date_command, weather_command, currency_command
@@ -24,6 +25,15 @@ def main():
         app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
         # Registrar comandos
+        commands = [
+            BotCommand("start", "Iniciar el bot"),
+            BotCommand("help", "Mostrar este mensaje de ayuda"),
+            BotCommand("fecha", "Obtener la fecha y hora actual"),
+            BotCommand("clima", "Consultar el clima de una ciudad"),
+            BotCommand("convertir", "Convertir entre monedas")
+        ]
+        app.bot.set_my_commands(commands)
+
         app.add_handler(CommandHandler("start", start_command))
         app.add_handler(CommandHandler("help", help_command))
         app.add_handler(CommandHandler("fecha", date_command))

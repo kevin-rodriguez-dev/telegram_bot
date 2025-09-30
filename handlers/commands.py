@@ -61,7 +61,7 @@ async def weather_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         if not context.args:
             await update.message.reply_text(
-                "⚠️ Por favor especifica una ciudad.\n"
+                " Por favor especifica una ciudad.\n"
                 "Ejemplo: `/clima San Salvador`",
                 parse_mode="Markdown"
             )
