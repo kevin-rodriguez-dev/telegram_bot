@@ -67,6 +67,7 @@ Este proyecto utiliza **Python**, la API de **Google Gemini** y el framework **L
 | `/help` | Lista todos los comandos disponibles | `/help` |
 | `/fecha` | Muestra fecha y hora actual | `/fecha` |
 | `/clima [ciudad]` | Información meteorológica | `/clima San Salvador` |
+| `/convertir [cantidad] [moneda_origen] a [moneda_destino]` | Convertir entre monedas | `/convertir 10 USD a EUR` |
 
 **Estructura de archivos:**
    ```

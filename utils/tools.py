@@ -8,7 +8,7 @@ from config import WEATHER_API_KEY, WEATHER_BASE_URL
 logger = logging.getLogger(__name__)
 
 
-class ClimaAPI:
+class WeatherTool:
     """Herramienta para consultar el clima usando OpenWeatherMap API"""
     
     def __init__(self):
@@ -71,7 +71,7 @@ class ClimaAPI:
             return " Error al procesar los datos del clima"
 
 
-class FechaHoraAPI:
+class DatetimeTool:
     """Herramienta para obtener fecha y hora actual"""
     
     def obtener_fecha_hora(self, _: str = "") -> str:
@@ -102,7 +102,7 @@ class FechaHoraAPI:
             logger.error(f"Error al obtener fecha/hora: {str(e)}")
             return f" Error al obtener fecha/hora: {str(e)}"
 
-class BusquedaWeb:
+class WebSearchTool:
     """Herramienta para buscar información en la web usando DuckDuckGo"""
     
     def __init__(self):
@@ -185,13 +185,61 @@ class BusquedaWeb:
         except Exception as e:
             return f"Error al buscar en la web: {str(e)}"
 
+class CurrencyClass:
+    """Herramienta para conversión de monedas en tiempo real"""
+    def __init__(self):
+        self.base_url = "https://api.exchangerate-api.com/v4/latest"
+
+    def convertir_moneda(self, entrada: str) -> str:
+        """
+        Convierte monedas en tiempo real
+        """
+        try:
+            partes = entrada.upper().strip().split()
+            
+            if len(partes) < 4 or partes[2].upper() != 'A':
+                return " Formato inválido. Usa: 'cantidad moneda_origen a moneda_destino' (ej: '100 USD a EUR')"
+            
+            cantidad = float(partes[0])
+            moneda_origen = partes[1].upper()
+            moneda_destino = partes[3].upper()
+            
+            # Obtiene las tasas de cambio
+            response = requests.get(f"{self.base_url}/{moneda_origen}", timeout=10)
+            response.raise_for_status()
+            data = response.json()
+            
+            if moneda_destino not in data['rates']:
+                return f" Moneda '{moneda_destino}' no encontrada"
+            
+            tasa = data['rates'][moneda_destino]
+            resultado = cantidad * tasa
+            
+            return f""" 
+            Conversión de {moneda_origen} a {moneda_destino}:
+            {cantidad:,.2f} {moneda_origen} equivale a {resultado:,.2f} {moneda_destino}
+            
+            Tasa de cambio actualizada: 1 {moneda_origen} = {tasa:.2f} {moneda_destino}
+            Última actualización: {data['date']}
+            """.strip()
+            
+        except ValueError:
+            return " Cantidad inválida. Debe ser un número"
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error en API de monedas: {str(e)}")
+            return f" Error al consultar tasas de cambio: {str(e)}"
+        except Exception as e:
+            logger.error(f"Error en conversión de moneda: {str(e)}")
+            return f" Error: {str(e)}"
+
 class MultiAgent:
     """Clase que agrupa todas las herramientas disponibles para el agente"""
     
     def __init__(self):
-        self.clima_api = ClimaAPI()
-        self.fecha_hora_api = FechaHoraAPI()
-        self.busqueda_web = BusquedaWeb()
+        self.clima_api = WeatherTool()
+        self.fecha_hora_api = DatetimeTool()
+        self.busqueda_web = WebSearchTool()
+        self.currency_api = CurrencyClass()
     
     def langchain(self) -> List[Tool]:
         """
@@ -226,7 +274,15 @@ class MultiAgent:
                     "Útil para buscar información en la web."
                     "Input: término o pregunta de búsqueda (ej: 'Que es Machine learning?')"
                 )
-            )
+            ),
+            Tool(
+                name="convertir_moneda",
+                func=self.currency_api.convertir_moneda,
+                description=(
+                    "Útil para convertir entre diferentes monedas usando tasas de cambio en tiempo real. "
+                    "Input: formato 'cantidad moneda_origen a moneda_destino' "
+                )
+            ),
         ]
         
         logger.info(f" {len(tools)} herramientas configuradas para LangChain")

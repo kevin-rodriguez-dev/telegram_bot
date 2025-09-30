@@ -1,7 +1,7 @@
 import logging
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 from config import TELEGRAM_BOT_TOKEN
-from handlers.commands import start_command, help_command, date_command, weather_command
+from handlers.commands import start_command, help_command, date_command, weather_command, currency_command
 from handlers.messages import handle_message
 from utils.gemini_client import crear_agente_conversacional
 
@@ -28,6 +28,7 @@ def main():
         app.add_handler(CommandHandler("help", help_command))
         app.add_handler(CommandHandler("fecha", date_command))
         app.add_handler(CommandHandler("clima", weather_command))
+        app.add_handler(CommandHandler("convertir", currency_command))
 
         # Registrar manejador de mensajes con el agente
         app.add_handler(MessageHandler(
