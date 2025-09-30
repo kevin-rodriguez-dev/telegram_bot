@@ -42,15 +42,23 @@ class ClimaAPI:
 
             location = data["location"]
             current = data["current"]
+            
             clima_info = f"""
-            Clima en {location['name']}, {location["country"]}
-            Temperatura: {current["temp_c"]}°C (se siente como {current["feelslike_c"]}°C)
-            Condicion: {current["condition"]["text"]}
-            Viento: {current["wind_kph"]} km/h
-            Humedad: {current["humidity"]}%
-            Visibilidad: {current["vis_km"]} km
-            Ultima actualizacion: {current["last_updated"]}
+            Clima actual en {location['name']}, {location['region']}, {location['country']}
+            Hora local: {location['localtime']}
+
+            Temperatura: {current['temp_c']}°C
+            Sensación térmica: {current['feelslike_c']}°C
+            Condición: {current['condition']['text']}
+            Viento: {current['wind_kph']} km/h, dirección {current['wind_dir']}
+            Humedad: {current['humidity']}%
+            Presión atmosférica: {current['pressure_mb']} hPa
+            Visibilidad: {current['vis_km']} km
+            Índice UV: {current['uv']}
+
+            Última actualización: {current['last_updated']}
             """.strip()
+
             return clima_info
             
         except requests.exceptions.Timeout:
