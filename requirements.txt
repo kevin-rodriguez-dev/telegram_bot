@@ -6,3 +6,4 @@ langchain-google-genai
 python-telegram-bot
 pyTelegramBotAPI
 python-dotenv
+duckduckgo-search
