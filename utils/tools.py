@@ -40,27 +40,6 @@ class ClimaAPI:
             response.raise_for_status()
             data = response.json()
 
-            print(data)
-            # Extraer información
-            # temp = data["temp"]
-            # feels_like = data["feels_like"]
-            # temp_min = data["temp_min"]
-            # temp_max = data["temp_max"]
-            # humidity = data["humidity"]
-            # description = data["weather"][0]["description"].capitalize()
-            
-            # # Formatear respuesta
-            # resultado = (
-            #     f"🌤 *Clima en {ciudad.title()}*\n\n"
-            #     f"🌡 Temperatura: {temp}°C\n"
-            #     f"🤔 Sensación térmica: {feels_like}°C\n"
-            #     f"📊 Min/Max: {temp_min}°C / {temp_max}°C\n"
-            #     f"💧 Humedad: {humidity}%\n"
-            #     f"☁️ Condición: {description}"
-            # )
-            
-            # return resultado
-
             location = data["location"]
             current = data["current"]
             clima_info = f"""
